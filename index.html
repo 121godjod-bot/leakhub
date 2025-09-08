@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leakhub Official - Powered by Hated Warrior</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/565/565547.png">
+  <meta name="theme-color" content="#a10606">
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap');
+
+  :root {
+    --bloody-red1: #a10606;
+    --bloody-red2: #e10606;
+    --dark-bg: #1a1a1a;
+    --light-bg: #222;
+    --blood-bg: linear-gradient(135deg, #2f0c0c 0%, #1a1a1a 100%);
+    --text: #fff;
+    --accent: #ff4c4c;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--blood-bg);
+    color: var(--text);
+    font-family: 'Roboto', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: linear-gradient(90deg, var(--bloody-red1) 0%, var(--dark-bg) 100%);
+    padding: 1.5rem 1rem 1rem 1rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+
+  .discord-link {
+    color: var(--accent);
+    background: #fff1;
+    border-radius: 25px;
+    padding: 0.5rem 1.1rem;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Orbitron', monospace;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 1rem;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 12px var(--bloody-red2);
+    transition: background 0.2s;
+  }
+
+  .discord-icon {
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #780606;
+    background: #1a1a1a;
+  }
+
+  header h1 {
+    font-family: 'Nosifer', cursive;
+    font-size: 2.7rem;
+    letter-spacing: 0.08em;
+    color: var(--bloody-red2);
+    text-shadow: 2px 4px 12px #000, 0 0 6px var(--accent);
+  }
+
+  header .bloody {
+    color: var(--bloody-red1);
+    text-shadow: 0 0 10px var(--bloody-red2), 0 0 20px #000;
+  }
+
+  .subtitle {
+    margin-top: 0.2em;
+    font-size: 1.1rem;
+    color: #ffbdbd;
+  }
+
+  .subtitle a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  main {
+    padding: 1.2em 0.7em 0.7em 0.7em;
+    flex: 1 0 auto;
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .intro {
+    text-align: center;
+    margin-bottom: 2em;
+  }
+
+  .main-image {
+    width: 80px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 10px var(--bloody-red2));
+    border-radius: 20%;
+    box-shadow: 0 0 18px #a10606bb;
+  }
+
+  .intro h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent);
+    margin-bottom: 0.6em;
+    letter-spacing: 0.04em;
+  }
+
+  .highlight {
+    color: var(--bloody-red2);
+    font-weight: bold;
+  }
+
+  .features h2,
+  .team h2,
+  .leak-details h2,
+  .links h2 {
+    font-family: 'Orbitron', monospace;
+    color: var(--bloody-red2);
+    margin-bottom: 0.7em;
+    margin-top: 1em;
+    text-shadow: 0 0 8px #670202;
+  }
+
+  .features ul {
+    list-style: none;
+    margin-bottom: 1.2em;
+    font-size: 1.1rem;
+  }
+
+  .features .icon {
+    font-size: 1.25em;
+    margin-right: 0.3em;
+  }
+
+  .leak-image-row {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+    margin-bottom: 1em;
+    flex-wrap: wrap;
+  }
+
+  .leak-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 13px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 8px var(--bloody-red2);
+    margin-top: 5px;
+    background: #181818;
+  }
+
+  .team-list {
+    display: flex;
+    justify-content: center;
+    gap: 2.5em;
+    margin-bottom: 1.2em;
+    flex-wrap: wrap;
+  }
+
+  .team-list .member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95px;
+    margin-bottom: 1em;
+  }
+
+  .team-list .member img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2.5px solid var(--accent);
+    margin-bottom: 0.3em;
+    background: #2b0a0a;
+    box-shadow: 0 0 10px var(--bloody-red1);
+    object-fit: cover;
+  }
+
+  .team-list .member span {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--bloody-red2);
+    font-size: 1.08em;
+    font-weight: bold;
+    text-shadow: 1px 1px 4px #000;
+    margin-top: 0.2em;
+    word-break: break-all;
+  }
+
+  .leak-details {
+    background: #2d0404f5;
+    border-radius: 12px;
+    padding: 1em 1.2em;
+    margin-bottom: 1.2em;
+    box-shadow: 0 0 16px #67020244;
+    border: 2px solid var(--bloody-red2);
+  }
+
+  .leak-details ul {
+    margin-left: 1.5em;
+    margin-bottom: 0.7em;
+  }
+
+  .leak-details .disclaimer {
+    color: #ff8787;
+    font-size: 0.97em;
+    margin-top: 0.7em;
+    background: #200;
+    padding: 0.5em;
+    border-radius: 7px;
+  }
+
+  .links {
+    text-align: center;
+    margin-top: 1.5em;
+  }
+
+  .leakhub-link {
+    background: var(--bloody-red1);
+    color: #fff;
+    padding: 0.7em 1.4em;
+    border-radius: 33px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 0 20px #a10606aa;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+    border: 2.5px solid #fff5;
+    transition: background 0.15s;
+    font-size: 1.09em;
+    margin-top: 0.7em;
+  }
+  .leakhub-link img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .leakhub-link:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  footer {
+    background: #1a0101;
+    color: #ffbdbd;
+    padding: 1em 0;
+    text-align: center;
+    font-size: 1.02em;
+    box-shadow: 0 -2px 10px #a1060633;
+    margin-top: 1.2em;
+  }
+
+  footer a {
+    color: var(--bloody-red2);
+    text-decoration: underline;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .team-list {
+      gap: 1.2em;
+    }
+    .leak-image-row {
+      gap: 0.5em;
+    }
+    .leak-img {
+      width: 55px;
+      height: 55px;
+    }
+    .team-list .member img {
+      width: 45px;
+      height: 45px;
+    }
+    .team-list .member {
+      width: 70px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    header h1 {
+      font-size: 1.45rem;
+    }
+    .main-image {
+      width: 55px;
+    }
+    .features ul {
+      font-size: 1rem;
+    }
+    main {
+      padding: 0.5em 0.2em;
+    }
+    .leak-details {
+      padding: 0.7em 0.4em;
+    }
+    .leakhub-link {
+      padding: 0.5em 0.7em;
+      font-size: 1em;
+    }
+    .team-list .member {
+      width: 60px;
+    }
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <a href="https://discord.gg/hateop" target="_blank" class="discord-link">
+        <img src="https://images-ext-1.discordapp.net/external/R1OIJNTc1qZihRwtXJibgygRYdlT_keyO8QXEpVQ7lI/https/cdn.discordapp.com/icons/1141390886194913282/a_c34a91df71af4ae6e6d77f3d0c8495d0.gif?width=192&height=192"
+          alt="Hated Warrior" class="discord-icon">
+        Join Hated Warrior Discord
+      </a>
+    </div>
+    <h1>
+      <span class="bloody">Leakhub</span> Official
+    </h1>
+    <p class="subtitle">Powered by <a href="https://discord.gg/hateop" target="_blank">Hated Warrior</a></p>
+  </header>
+  <main>
+    <section class="intro">
+      <img src="https://images-ext-1.discordapp.net/external/R1OIJNTc1qZihRwtXJibgygRYdlT_keyO8QXEpVQ7lI/https/cdn.discordapp.com/icons/1141390886194913282/a_c34a91df71af4ae6e6d77f3d0c8495d0.gif?width=192&height=192"
+        alt="Bloody Leak" class="main-image">
+      <h2>Welcome to the Most Notorious Leakhub</h2>
+      <p>
+        <strong>Leakhub Official</strong> is your gateway to <span class="highlight">amazing free tools</span> and the wildest leaks, powered and protected by the <span class="highlight">Hated Warrior Discord server</span>. All our tools and leaks are <b>free of cost</b> and we provide a <span class="highlight">quick backup</span> via Discord OAuth!
+      </p>
+    </section>
+    <section class="features">
+      <h2>What We Offer</h2>
+      <ul>
+        <li><span class="icon">🛠️</span> <b>121 Recs &amp; Phone Number Leaks</b></li>
+        <li><span class="icon">🏠</span> <b>Household Address &amp; Family Phone Numbers</b></li>
+        <li><span class="icon">📸</span> <b>Real Pics</b></li>
+        <li><span class="icon">🤫</span> <b>Leaks of Discord Raiders, Youtubers, Chilling &amp; Raiding Clans</b></li>
+      </ul>
+      <div class="leak-image-row">
+        <img src="https://images-ext-1.discordapp.net/external/R1OIJNTc1qZihRwtXJibgygRYdlT_keyO8QXEpVQ7lI/https/cdn.discordapp.com/icons/1141390886194913282/a_c34a91df71af4ae6e6d77f3d0c8495d0.gif?width=192&height=192" alt="Leaker" class="leak-img">
+        <img src="https://images-ext-1.discordapp.net/external/6tVaUxectogf8lZc5X8fWTGd2tbzlG6I5AtVbWYYLNI/https/cdn.discordapp.com/embed/avatars/4.png?format=webp&quality=lossless&width=384&height=384" alt="Raiders" class="leak-img">
+        <img src="https://images-ext-1.discordapp.net/external/PDzA4t4nQrow0Ahsx4XXk1vN8xrivOZaMh1k0EmtYok/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1411985665507328104/6ec32b975f0af59fc73466a75ca08667.png?format=webp&quality=lossless&width=384&height=384" alt="Clans" class="leak-img">
+      </div>
+    </section>
+    <section class="team">
+      <h2>Officially Running By</h2>
+      <div class="team-list">
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/6tVaUxectogf8lZc5X8fWTGd2tbzlG6I5AtVbWYYLNI/https/cdn.discordapp.com/embed/avatars/4.png?format=webp&quality=lossless&width=384&height=384" alt="Omkar">
+          <span>Omkar</span>
+        </div>
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/K2m3h41COQPZRJ2qrXkAUgIVPOnHv3S0XxOqjPRDuyQ/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/915135377369620510/1165e11dd5dd8dcc7348abfad4eaef6a.png?format=webp&quality=lossless&width=384&height=384" alt="Bond">
+          <span>Bond</span>
+        </div>
+        <div class="member">
+          <img src="https://images-ext-1.discordapp.net/external/PDzA4t4nQrow0Ahsx4XXk1vN8xrivOZaMh1k0EmtYok/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1411985665507328104/6ec32b975f0af59fc73466a75ca08667.png?format=webp&quality=lossless&width=384&height=384" alt="Levi">
+          <span>Levi</span>
+        </div>
+      </div>
+    </section>
+    <section class="leak-details">
+      <h2>Leakhub Description</h2>
+      <p>
+        Our leakhub is infamous for the most comprehensive and wild leaks in the scene. Get access to:
+      </p>
+      <ul>
+        <li>Discord raider leaks</li>
+        <li>Youtuber leaks</li>
+        <li>Discord chill &amp; raid clan leaks</li>
+        <li>121 recs, phone numbers, addresses, family info &amp; more</li>
+      </ul>
+      <p class="disclaimer"><b>Disclaimer:</b> All content is for educational and research purposes only.</p>
+    </section>
+    <section class="links">
+      <h2>Leakhub Links</h2>
+      <a href="https://discord.gg/pzymXXcU2S" class="leakhub-link" target="_blank">
+        <img src="https://images-ext-1.discordapp.net/external/R1OIJNTc1qZihRwtXJibgygRYdlT_keyO8QXEpVQ7lI/https/cdn.discordapp.com/icons/1141390886194913282/a_c34a91df71af4ae6e6d77f3d0c8495d0.gif?width=192&height=192" alt="Leakhub Discord"> Join Leakhub (Discord)
+      </a>
+    </section>
+  </main>
+  <footer>
+    <span>&copy; 2025 Leakhub Official | Bloody leaks powered by <a href="https://discord.gg/hateop" target="_blank">Hated Warrior</a></span>
+  </footer>
+  <script>
+  // Bloody title animation
+  document.addEventListener("DOMContentLoaded", function() {
+    const title = document.querySelector("header h1");
+    function bloodyPulse() {
+      title.style.textShadow = "0 0 16px #ff4c4c, 0 0 32px #a10606";
+      setTimeout(() => {
+        title.style.textShadow = "2px 4px 12px #000, 0 0 6px #ff4c4c";
+      }, 400);
+    }
+    setInterval(bloodyPulse, 2500);
+  });
+  </script>
+</body>
+</html>
