@@ -17,6 +17,8 @@
     --blood-bg: linear-gradient(135deg, #2f0c0c 0%, #1a1a1a 100%);
     --text: #fff;
     --accent: #ff4c4c;
+    --banner-height: 240px;
+    --banner-radius: 28px;
   }
 
   * {
@@ -39,6 +41,7 @@
     padding: 1.5rem 1rem 1rem 1rem;
     text-align: center;
     position: relative;
+    overflow: hidden;
   }
 
   .topbar {
@@ -61,16 +64,71 @@
     font-size: 1rem;
     border: 2px solid var(--accent);
     box-shadow: 0 0 12px var(--bloody-red2);
-    transition: background 0.2s;
+    transition: background 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 2;
+    animation: fadeInTop 0.8s;
+  }
+  @keyframes fadeInTop {
+    from { opacity: 0; transform: translateY(-30px);}
+    to {opacity: 1; transform: translateY(0);}
   }
 
   .discord-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     vertical-align: middle;
     border-radius: 50%;
     box-shadow: 0 0 8px #780606;
     background: #1a1a1a;
+  }
+
+  /* Banner Animation */
+  .banner-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
+    margin: 0 auto 1.5rem auto;
+    position: relative;
+    z-index: 1;
+    height: var(--banner-height);
+    min-height: 120px;
+    align-items: center;
+    animation: fadeIn 1s;
+  }
+  .banner-img {
+    height: var(--banner-height);
+    width: 32vw;
+    max-width: 400px;
+    object-fit: cover;
+    border-radius: var(--banner-radius);
+    border: 3px solid var(--bloody-red2);
+    box-shadow: 0 0 32px #ff4c4c55, 0 0 10px #000;
+    transition: transform 0.4s, box-shadow 0.3s;
+    position: relative;
+    z-index: 1;
+    animation: bannerPulse 2.5s infinite alternate;
+  }
+  .banner-img:nth-child(2) {
+    z-index: 2;
+    transform: scale(1.09) rotate(-2deg);
+    filter: drop-shadow(0 0 18px var(--accent));
+    animation-delay: 0.5s;
+  }
+  .banner-img:hover {
+    transform: scale(1.11) rotate(-2deg) translateY(-10px) !important;
+    box-shadow: 0 0 40px #ff4c4c, 0 0 24px #a10606, 0 0 10px #fff2;
+    z-index: 5;
+    filter: brightness(1.07) saturate(1.3) drop-shadow(0 0 20px var(--accent));
+  }
+  @keyframes bannerPulse {
+    0% { box-shadow: 0 0 24px #ff4c4c44, 0 0 7px #a10606;}
+    100% { box-shadow: 0 0 38px #ff4c4c, 0 0 20px #a10606;}
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-40px);}
+    to {opacity: 1; transform: translateY(0);}
   }
 
   header h1 {
@@ -79,17 +137,38 @@
     letter-spacing: 0.08em;
     color: var(--bloody-red2);
     text-shadow: 2px 4px 12px #000, 0 0 6px var(--accent);
+    margin-bottom: 0.1em;
+    position: relative;
+    z-index: 2;
+    animation: titleBloodyFade 1.3s;
+  }
+
+  @keyframes titleBloodyFade {
+    from { opacity: 0; letter-spacing: 1.5em;}
+    to { opacity: 1; letter-spacing: 0.08em;}
   }
 
   header .bloody {
     color: var(--bloody-red1);
     text-shadow: 0 0 10px var(--bloody-red2), 0 0 20px #000;
+    animation: bloodDrip 4s infinite;
+    position: relative;
+  }
+  @keyframes bloodDrip {
+    0% { text-shadow: 0 0 10px #e10606, 0 0 20px #000;}
+    12% { text-shadow: 0 11px 20px #a10606aa, 0 0 20px #000;}
+    16% { text-shadow: 0 20px 30px #a10606cc, 0 0 20px #000;}
+    24% { text-shadow: 0 0 10px #e10606, 0 0 20px #000;}
+    100% { text-shadow: 0 0 10px #e10606, 0 0 20px #000;}
   }
 
   .subtitle {
     margin-top: 0.2em;
     font-size: 1.1rem;
     color: #ffbdbd;
+    position: relative;
+    z-index: 2;
+    animation: fadeIn 2s;
   }
 
   .subtitle a {
@@ -107,14 +186,20 @@
   .intro {
     text-align: center;
     margin-bottom: 2em;
+    animation: fadeIn 1.5s;
   }
 
   .main-image {
-    width: 80px;
+    width: 90px;
     margin-bottom: 10px;
     filter: drop-shadow(0 0 10px var(--bloody-red2));
     border-radius: 20%;
     box-shadow: 0 0 18px #a10606bb;
+    animation: floatY 2.6s infinite alternate;
+  }
+  @keyframes floatY {
+    0% { transform: translateY(0);}
+    100% {transform: translateY(-8px);}
   }
 
   .intro h2 {
@@ -122,11 +207,19 @@
     color: var(--accent);
     margin-bottom: 0.6em;
     letter-spacing: 0.04em;
+    animation: fadeIn 1.5s;
   }
 
   .highlight {
     color: var(--bloody-red2);
     font-weight: bold;
+    animation: blink 2.2s infinite;
+  }
+  @keyframes blink {
+    0%, 100% { color: var(--bloody-red2);}
+    55% { color: #fff;}
+    60% { color: var(--accent);}
+    80% { color: var(--bloody-red2);}
   }
 
   .features h2,
@@ -138,12 +231,14 @@
     margin-bottom: 0.7em;
     margin-top: 1em;
     text-shadow: 0 0 8px #670202;
+    animation: fadeInTop 1.2s;
   }
 
   .features ul {
     list-style: none;
     margin-bottom: 1.2em;
     font-size: 1.1rem;
+    animation: fadeIn 1.2s;
   }
 
   .features .icon {
@@ -152,22 +247,7 @@
   }
 
   .leak-image-row {
-    display: flex;
-    gap: 1em;
-    justify-content: center;
-    margin-bottom: 1em;
-    flex-wrap: wrap;
-  }
-
-  .leak-img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 13px;
-    border: 2px solid var(--accent);
-    box-shadow: 0 0 8px var(--bloody-red2);
-    margin-top: 5px;
-    background: #181818;
+    display: none;
   }
 
   .team-list {
@@ -176,25 +256,32 @@
     gap: 2.5em;
     margin-bottom: 1.2em;
     flex-wrap: wrap;
+    animation: fadeIn 1.2s;
   }
 
   .team-list .member {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 95px;
+    width: 105px;
     margin-bottom: 1em;
+    animation: teamPopIn 1.3s;
+  }
+  @keyframes teamPopIn {
+    from { opacity: 0; transform: scale(0.79);}
+    to { opacity: 1; transform: scale(1);}
   }
 
   .team-list .member img {
-    width: 64px;
-    height: 64px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    border: 2.5px solid var(--accent);
+    border: 3px solid var(--accent);
     margin-bottom: 0.3em;
     background: #2b0a0a;
     box-shadow: 0 0 10px var(--bloody-red1);
     object-fit: cover;
+    animation: floatY 2.6s infinite alternate;
   }
 
   .team-list .member span {
@@ -214,6 +301,7 @@
     margin-bottom: 1.2em;
     box-shadow: 0 0 16px #67020244;
     border: 2px solid var(--bloody-red2);
+    animation: fadeIn 2.1s;
   }
 
   .leak-details ul {
@@ -228,11 +316,13 @@
     background: #200;
     padding: 0.5em;
     border-radius: 7px;
+    animation: blink 3s infinite;
   }
 
   .links {
     text-align: center;
     margin-top: 1.5em;
+    animation: fadeInTop 1.3s;
   }
 
   .leakhub-link {
@@ -247,13 +337,14 @@
     align-items: center;
     gap: 0.7em;
     border: 2.5px solid #fff5;
-    transition: background 0.15s;
+    transition: background 0.15s, box-shadow 0.15s;
     font-size: 1.09em;
     margin-top: 0.7em;
+    animation: fadeIn 2s;
   }
   .leakhub-link img {
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     object-fit: cover;
   }
@@ -261,6 +352,8 @@
   .leakhub-link:hover {
     background: var(--accent);
     color: #fff;
+    box-shadow: 0 0 40px #ff4c4c, 0 0 24px #a10606, 0 0 10px #fff2;
+    transform: scale(1.05);
   }
 
   footer {
@@ -271,6 +364,7 @@
     font-size: 1.02em;
     box-shadow: 0 -2px 10px #a1060633;
     margin-top: 1.2em;
+    animation: fadeIn 2.2s;
   }
 
   footer a {
@@ -279,12 +373,26 @@
   }
 
   /* Responsive */
+  @media (max-width: 1100px) {
+    .banner-row {
+      --banner-height: 180px;
+    }
+    .banner-img {
+      max-width: 300px;
+      width: 29vw;
+    }
+  }
   @media (max-width: 700px) {
+    .banner-row {
+      --banner-height: 120px;
+      gap: 1vw;
+    }
+    .banner-img {
+      max-width: 150px;
+      width: 31vw;
+    }
     .team-list {
       gap: 1.2em;
-    }
-    .leak-image-row {
-      gap: 0.5em;
     }
     .leak-img {
       width: 55px;
@@ -301,10 +409,10 @@
 
   @media (max-width: 480px) {
     header h1 {
-      font-size: 1.45rem;
+      font-size: 1.1rem;
     }
     .main-image {
-      width: 55px;
+      width: 42px;
     }
     .features ul {
       font-size: 1rem;
@@ -322,6 +430,13 @@
     .team-list .member {
       width: 60px;
     }
+    .banner-row {
+      --banner-height: 80px;
+    }
+    .banner-img {
+      max-width: 85px;
+      width: 32vw;
+    }
   }
   </style>
 </head>
@@ -333,6 +448,11 @@
           alt="Hated Warrior" class="discord-icon">
         Join Hated Warrior Discord
       </a>
+    </div>
+    <div class="banner-row">
+      <img src="https://media.discordapp.net/attachments/1413799962151751680/1414549386704457738/raw.png?ex=68bff946&is=68bea7c6&hm=345037621d377724b5e1a1ffdf92c6b856afb5c0901f22ec180c78c5e465c212&=&format=webp&quality=lossless&width=1224&height=816" alt="Banner 1" class="banner-img">
+      <img src="https://media.discordapp.net/attachments/1413799962151751680/1414551227718697010/ChatGPT_Image_Sep_8_2025_03_30_52_PM.png?ex=68bffafd&is=68bea97d&hm=26a258104d84c2fbfd16c13490e83b95a5e09c8d059fe389390f5c7342414734&=&format=webp&quality=lossless&width=1427&height=816" alt="Banner 2" class="banner-img">
+      <img src="https://media.discordapp.net/attachments/1413799962151751680/1414551955249954877/53e45223-dc3b-4e49-9201-6cddf13d3d77.png?ex=68bffbab&is=68beaa2b&hm=f03b2aaa91106be934f8b66ee7f7f0b4c006432c392fb85c6a006c52be65e4b7&=&format=webp&quality=lossless&width=1451&height=816" alt="Banner 3" class="banner-img">
     </div>
     <h1>
       <span class="bloody">Leakhub</span> Official
@@ -356,11 +476,6 @@
         <li><span class="icon">📸</span> <b>Real Pics</b></li>
         <li><span class="icon">🤫</span> <b>Leaks of Discord Raiders, Youtubers, Chilling &amp; Raiding Clans</b></li>
       </ul>
-      <div class="leak-image-row">
-        <img src="https://media.discordapp.net/attachments/1413799962151751680/1414549386704457738/raw.png?ex=68bff946&is=68bea7c6&hm=345037621d377724b5e1a1ffdf92c6b856afb5c0901f22ec180c78c5e465c212&=&format=webp&quality=lossless&width=1224&height=816" alt="Leaker" class="leak-img">
-        <img src="https://media.discordapp.net/attachments/1413799962151751680/1414551227718697010/ChatGPT_Image_Sep_8_2025_03_30_52_PM.png?ex=68bffafd&is=68bea97d&hm=26a258104d84c2fbfd16c13490e83b95a5e09c8d059fe389390f5c7342414734&=&format=webp&quality=lossless&width=1427&height=816" alt="Raiders" class="leak-img">
-        <img src="https://media.discordapp.net/attachments/1413799962151751680/1414551955249954877/53e45223-dc3b-4e49-9201-6cddf13d3d77.png?ex=68bffbab&is=68beaa2b&hm=f03b2aaa91106be934f8b66ee7f7f0b4c006432c392fb85c6a006c52be65e4b7&=&format=webp&quality=lossless&width=1451&height=816" alt="Clans" class="leak-img">
-      </div>
     </section>
     <section class="team">
       <h2>Officially Running By</h2>
@@ -403,8 +518,9 @@
     <span>&copy; 2025 Leakhub Official | Bloody leaks powered by <a href="https://discord.gg/hateop" target="_blank">Hated Warrior</a></span>
   </footer>
   <script>
-  // Bloody title animation
+  // Bloody title animation & banner hover
   document.addEventListener("DOMContentLoaded", function() {
+    // Title bloody pulse
     const title = document.querySelector("header h1");
     function bloodyPulse() {
       title.style.textShadow = "0 0 16px #ff4c4c, 0 0 32px #a10606";
@@ -413,6 +529,33 @@
       }, 400);
     }
     setInterval(bloodyPulse, 2500);
+
+    // Banner mousemove parallax
+    const bannerImgs = document.querySelectorAll('.banner-img');
+    const bannerRow = document.querySelector('.banner-row');
+    if(bannerRow && bannerImgs.length) {
+      bannerRow.addEventListener('mousemove', (e) => {
+        const rect = bannerRow.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const center = rect.width / 2;
+        const offset = (x - center)/center;
+        bannerImgs.forEach((img, i) => {
+          let mult = (i-1) * 16; // -16, 0, +16
+          img.style.transform = `scale(${i==1?1.11:1.02}) translateY(-6px) translateX(${mult + offset*18}px) rotate(${(i-1)*3 + offset*2}deg)`;
+        });
+      });
+      bannerRow.addEventListener('mouseleave', () => {
+        bannerImgs.forEach((img, i) => {
+          img.style.transform = i === 1 ? 'scale(1.09) rotate(-2deg)' : 'scale(1.00) rotate(0deg)';
+        });
+      });
+    }
+
+    // Floating team avatars (staggered)
+    const teamImgs = document.querySelectorAll('.team-list .member img');
+    teamImgs.forEach((img, i) => {
+      img.style.animationDelay = (0.5 + i*0.3) + "s";
+    });
   });
   </script>
 </body>
