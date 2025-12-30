@@ -1,186 +1,540 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Discord Complaint System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quantum Gaming — Complaints & Feedback</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: #e5e7eb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  /* Modern minimal UI */
+  :root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#6ee7b7;
+    --glass: rgba(255,255,255,0.03);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
-
-  .box {
-    width: 360px;
-    background: #020617;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#061021 0%, #071428 100%);
+    color: #e6eef6;
   }
-
-  h2 {
-    text-align: center;
-    margin-bottom: 15px;
-  }
-
-  button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    background: #5865F2;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-  }
-
-  button:hover {
-    opacity: 0.9;
-  }
-
-  input, textarea {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    background: #020617;
-    color: white;
-    border: 1px solid #334155;
-  }
-
-  textarea {
-    resize: none;
-    height: 90px;
-  }
-
-  .user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .user img {
-    width: 40px;
-    border-radius: 50%;
-  }
-
-  .hidden {
-    display: none;
-  }
+  .wrap{width:980px; max-width:96vw; padding:28px; border-radius:14px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); box-shadow: 0 10px 40px rgba(2,6,23,0.6);}
+  header{display:flex; align-items:center; gap:16px; margin-bottom:18px}
+  .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700;color:#042;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
+  h1{font-size:20px;margin:0}
+  .top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+  button{background:var(--accent); border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; color:#042}
+  button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04); color:var(--muted);font-weight:600}
+  .grid{display:grid;grid-template-columns:1fr 420px; gap:18px}
+  .card{background:var(--card); padding:16px; border-radius:12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02)}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  input[type=text], textarea, select{width:100%; padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;font-size:14px}
+  textarea{min-height:140px; resize:vertical}
+  .readonly{background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));opacity:0.95}
+  .userbox{display:flex; gap:12px; align-items:center}
+  .avatar{width:64px;height:64px;border-radius:12px; background:#081025; display:flex;align-items:center;justify-content:center; font-weight:700}
+  .meta{font-size:13px;color:var(--muted)}
+  .small{font-size:12px;color:var(--muted)}
+  .files-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .preview-item{width:84px;height:84px;border-radius:8px;overflow:hidden;background:#071027;display:flex;align-items:center;justify-content:center;position:relative;border:1px solid rgba(255,255,255,0.02)}
+  .preview-item img, .preview-item video{width:100%; height:100%; object-fit:cover}
+  .muted-note{font-size:12px;color:var(--muted); margin-top:8px}
+  .footer-row{display:flex;gap:8px;align-items:center;margin-top:12px}
+  .pill{background:var(--glass); padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+  .danger{background:#ffebee;color:#7b0711}
+  .success{background:#e6fff6;color:#063d2f}
+  .toggle-tabs{display:flex;gap:8px;margin-bottom:10px}
+  .tab{padding:8px 12px;border-radius:999px;cursor:pointer}
+  .tab.active{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#042;font-weight:700}
+  .captcha-row{display:flex;gap:10px;align-items:center;margin-top:8px}
+  .hp{display:none !important} /* honeypot hidden */
+  @media (max-width:900px){ .grid{grid-template-columns:1fr; } .top-actions{display:none} }
 </style>
 </head>
-
 <body>
+<div class="wrap">
+  <header>
+    <div class="logo">QG</div>
+    <div>
+      <h1>Quantum Gaming — Complaint & Feedback</h1>
+      <div class="small">Fast, beautiful, and secure — file attachments & webhook-ready</div>
+    </div>
 
-<div class="box">
-  <h2>Complaint System</h2>
+    <div class="top-actions">
+      <div id="login-area">
+        <button id="login-btn">Login with Discord</button>
+      </div>
+    </div>
+  </header>
 
-  <!-- LOGIN -->
-  <div id="login">
-    <button onclick="login()">Login with Discord</button>
-  </div>
+  <div class="grid">
+    <div>
+      <div class="card">
+        <div class="toggle-tabs" role="tablist">
+          <div class="tab active" data-type="complaint">Complaint</div>
+          <div class="tab" data-type="suggestion">Suggestion / Feedback</div>
+        </div>
 
-  <!-- USER + FORM -->
-  <div id="app" class="hidden">
-    <div class="user">
-      <img id="avatar" />
-      <div>
-        <div id="username"></div>
-        <small id="userid"></small>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+          <div class="userbox">
+            <div class="avatar" id="avatar">?</div>
+            <div>
+              <div id="username-display" style="font-weight:700">Not logged in</div>
+              <div class="meta" id="userid-display">—</div>
+            </div>
+          </div>
+          <div style="margin-left:auto" class="small">Submissions are rate-limited & protected</div>
+        </div>
+
+        <form id="complaint-form" class="hp" autocomplete="off">
+          <!-- honeypot (hidden) -->
+          <input type="text" name="website_name" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" />
+        </form>
+
+        <form id="main-form" class="">
+          <label>Username</label>
+          <input id="username" class="readonly" type="text" readonly placeholder="Login to populate" />
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+            <div>
+              <label>User ID</label>
+              <input id="userid" class="readonly" readonly type="text" />
+            </div>
+            <div>
+              <label>Email</label>
+              <input id="email" class="readonly" readonly type="text" />
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+            <label style="margin:0">Attach files</label>
+            <div style="margin-left:auto" class="small muted-note">Max 5 files, each ≤ 10 MB</div>
+          </div>
+          <input id="files" type="file" multiple accept="image/*,video/*,audio/*,application/*" style="margin-top:8px" />
+
+          <div class="files-preview" id="preview"></div>
+
+          <label style="margin-top:12px">Description (optional)</label>
+          <textarea id="description" placeholder="Describe the issue or suggestion..."></textarea>
+
+          <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+            <label>Priority</label>
+            <select id="priority" style="width:160px">
+              <option value="low">Low</option>
+              <option value="normal" selected>Normal</option>
+              <option value="high">High</option>
+            </select>
+            <div style="margin-left:auto" id="char-count" class="small muted-note">0/2000</div>
+          </div>
+
+          <!-- CAPTCHA + Anti-spam -->
+          <div class="card" style="margin-top:12px;padding:10px">
+            <div style="display:flex;align-items:center;gap:12px;justify-content:space-between">
+              <div>
+                <div class="small">Please solve the captcha to submit</div>
+                <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+                  <div id="captcha-question" style="font-weight:700"></div>
+                  <input id="captcha-answer" type="text" placeholder="Answer" style="width:120px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03)" />
+                  <button type="button" id="refresh-captcha" class="ghost" style="padding:8px">Refresh</button>
+                </div>
+                <div class="small muted-note" style="margin-top:8px">Hidden field + rate limiter also active to block bots.</div>
+              </div>
+              <div>
+                <div class="pill small" id="rate-info">You can submit now</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-row">
+            <button id="submit-btn" type="button">Send</button>
+            <button id="download-payload" type="button" class="ghost">Download payload (debug)</button>
+            <div style="margin-left:auto" class="small muted-note">Prefer serverless forwarder (Vercel). See instructions below.</div>
+          </div>
+
+          <div id="status" style="margin-top:10px"></div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top:12px;font-size:13px">
+        <strong>How it works</strong>
+        <ol style="padding-left:18px;margin-top:8px;color:var(--muted)">
+          <li>Login with Discord (top right). We request <code>identify email</code> scope to get username, id & email.</li>
+          <li>Fill description and attach files. Files are encoded and sent to the serverless forwarder which posts to Discord webhook.</li>
+          <li>Captcha + honeypot + per-user rate limit help stop spam. You can enable direct webhook posting but it may be blocked by CORS.</li>
+        </ol>
       </div>
     </div>
 
-    <input id="title" placeholder="Complaint title" />
-    <textarea id="message" placeholder="Describe your complaint..."></textarea>
+    <aside>
+      <div class="card">
+        <h3 style="margin-top:0">Delivery settings</h3>
+        <div class="small" style="margin-bottom:8px">Change below to point where complaints should go.</div>
 
-    <button onclick="sendComplaint()">Submit Complaint</button>
+        <label>Method</label>
+        <select id="deliver-method">
+          <option value="forward" selected>Vercel Forwarder (recommended)</option>
+          <option value="direct">Direct to Discord Webhook (may be blocked by CORS)</option>
+        </select>
+
+        <label style="margin-top:8px">Webhook URL (for direct)</label>
+        <input id="webhook-url" placeholder="https://discord.com/api/webhooks/..." />
+
+        <label style="margin-top:8px">Forwarder endpoint (for Vercel)</label>
+        <input id="forward-url" placeholder="/api/forward" value="/api/forward" />
+        <div class="small muted-note" style="margin-top:8px">If you deploy to Vercel, use <code>/api/forward</code> or your full Vercel URL.</div>
+
+        <div style="margin-top:12px">
+          <div class="small"><strong>Anti-spam options</strong></div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <label><input id="enforce-login" type="checkbox" checked /> Require login</label>
+          </div>
+          <div class="small muted-note" style="margin-top:8px">Local rate limit prevents repeated submissions from same browser. Server-side forwarder should also validate rate limits for stronger protection.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h4 style="margin:0 0 8px 0">Developer / Deploy notes</h4>
+        <div class="small" style="color:var(--muted)">
+          • Replace <code>DISCORD_CLIENT_ID</code> below with your Discord App Client ID and set Redirect URI in Discord Developer Portal to the deployed page URL. <br>
+          • For secure, reliable delivery use the included Vercel serverless forwarder <code>api/forward.js</code>. <br>
+          • If you must use direct webhook, paste it above (beware of CORS & security). <br>
+          • This page is deliberately dependency-free: no build step required.
+        </div>
+      </div>
+    </aside>
   </div>
 </div>
 
 <script>
-const CLIENT_ID = "1450466176479006801";
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1455556171506127014/1zgNGj3oI6sLbi0Ysr5gEUWCsBIMmGKyaWDeipJHGQQXIUeVQabqyw7o1oge5S9nh7Ov";
+/*
+  Configuration - REPLACE these values:
+  - DISCORD_CLIENT_ID: Your Discord application client id.
+  - REDIRECT_URI: Redirect URL you set in Discord developer portal (the page URL).
+*/
+const CONFIG = {
+  DISCORD_CLIENT_ID: "1450466176479006801",
+  REDIRECT_URI: window.location.origin + window.location.pathname, // default: same page
+  OAUTH_SCOPES: "identify email",
+  API_VERSION: "v10"
+};
 
-function login() {
-  const redirect = window.location.origin + "/";
-  const url =
-    `https://discord.com/oauth2/authorize` +
-    `?client_id=${CLIENT_ID}` +
-    `&response_type=token` +
-    `&redirect_uri=${encodeURIComponent(redirect)}` +
-    `&scope=identify`;
+/* ---------- Basic UI wiring ---------- */
+const loginBtn = document.getElementById('login-btn');
+const usernameEl = document.getElementById('username');
+const useridEl = document.getElementById('userid');
+const emailEl = document.getElementById('email');
+const avatarEl = document.getElementById('avatar');
+const filesInput = document.getElementById('files');
+const previewEl = document.getElementById('preview');
+const submitBtn = document.getElementById('submit-btn');
+const statusEl = document.getElementById('status');
+const charCount = document.getElementById('char-count');
+const desc = document.getElementById('description');
+const deliverMethod = document.getElementById('deliver-method');
+const webhookUrlInput = document.getElementById('webhook-url');
+const forwardUrlInput = document.getElementById('forward-url');
+const enforceLogin = document.getElementById('enforce-login');
+const downloadBtn = document.getElementById('download-payload');
+const rateInfo = document.getElementById('rate-info');
+const tabs = document.querySelectorAll('.tab');
+let activeType = 'complaint';
 
-  window.location.href = url;
+tabs.forEach(t => t.addEventListener('click', e => {
+  tabs.forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  activeType = t.dataset.type;
+}));
+
+/* ---------- OAuth login flow (implicit token flow) ----------
+   NOTE: For production, Authorization Code with PKCE + server-side is recommended.
+   This example uses response_type=token to keep everything client-side (no secret).
+   Replace CONFIG.DISCORD_CLIENT_ID and set redirect URI in your Discord App.
+*/
+function loginWithDiscord(){
+  const state = Math.random().toString(36).slice(2); // simple CSRF token
+  sessionStorage.setItem('discord_oauth_state', state);
+  const url = new URL('https://discord.com/api/oauth2/authorize');
+  url.searchParams.set('client_id', CONFIG.DISCORD_CLIENT_ID);
+  url.searchParams.set('redirect_uri', CONFIG.REDIRECT_URI);
+  url.searchParams.set('response_type', 'token'); // implicit (client-side)
+  url.searchParams.set('scope', CONFIG.OAUTH_SCOPES);
+  url.searchParams.set('state', state);
+  // optional: prompt=consent
+  window.location.href = url.toString();
 }
 
-// Get token from URL
-const hash = new URLSearchParams(window.location.hash.substring(1));
-const token = hash.get("access_token");
+loginBtn.addEventListener('click', loginWithDiscord);
 
-if (token) {
-  fetch("https://discord.com/api/users/@me", {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  .then(r => r.json())
-  .then(user => {
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
+/* parse access token from URL hash if present */
+function parseHash(){
+  if(location.hash && location.hash.includes('access_token')){
+    const hash = new URLSearchParams(location.hash.slice(1));
+    const token = hash.get('access_token');
+    const state = hash.get('state');
+    const stored = sessionStorage.getItem('discord_oauth_state');
+    if(state !== stored){
+      console.warn('OAuth state mismatch');
+      return;
+    }
+    sessionStorage.setItem('discord_token', token);
+    // remove hash from URL
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    return token;
+  }
+  return sessionStorage.getItem('discord_token') || null;
+}
 
-    document.getElementById("username").textContent =
-      `${user.username}#${user.discriminator}`;
-    document.getElementById("userid").textContent = `ID: ${user.id}`;
-    document.getElementById("avatar").src =
-      `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
-    
-    window.discordUser = user;
+/* fetch user info from Discord API */
+async function fetchDiscordUser(token){
+  try {
+    const resp = await fetch(`https://discord.com/api/${CONFIG.API_VERSION}/users/@me`, {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    if(!resp.ok) throw new Error('Failed to fetch user: ' + resp.status);
+    const data = await resp.json();
+    return data;
+  } catch (e){
+    console.error(e);
+    return null;
+  }
+}
+
+/* populate UI if logged in */
+async function tryPopulate(){
+  const token = parseHash();
+  if(!token) return;
+  const user = await fetchDiscordUser(token);
+  if(!user) return;
+  usernameEl.value = user.username + (user.discriminator ? '#' + user.discriminator : '');
+  useridEl.value = user.id;
+  emailEl.value = user.email || '';
+  document.getElementById('username-display').innerText = user.username + (user.discriminator ? '#' + user.discriminator : '');
+  document.getElementById('userid-display').innerText = 'ID: ' + user.id;
+  // avatar
+  if(user.avatar){
+    const ext = user.avatar.startsWith('a_') ? 'gif' : 'png';
+    const url = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
+    avatarEl.style.backgroundImage = `url(${url})`;
+    avatarEl.style.backgroundSize = 'cover';
+    avatarEl.innerText = '';
+  } else {
+    avatarEl.innerText = user.username.slice(0,1).toUpperCase();
+  }
+  document.getElementById('login-area').innerHTML = '<button id="logout">Logout</button>';
+  document.getElementById('logout').addEventListener('click', () => {
+    sessionStorage.removeItem('discord_token');
+    location.reload();
   });
 }
+tryPopulate();
 
-function sendComplaint() {
-  const title = document.getElementById("title").value.trim();
-  const msg = document.getElementById("message").value.trim();
+/* ---------- Files preview + limit checks ---------- */
+const MAX_FILES = 5;
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB each
+let selectedFiles = [];
 
-  if (!title || !msg) {
-    alert("Fill all fields");
-    return;
+filesInput.addEventListener('change', async (e) => {
+  previewEl.innerHTML = '';
+  selectedFiles = Array.from(e.target.files).slice(0, MAX_FILES);
+  for(const f of selectedFiles){
+    const div = document.createElement('div'); div.className='preview-item';
+    if(f.type.startsWith('image/')){
+      const img = document.createElement('img'); img.src = URL.createObjectURL(f);
+      div.appendChild(img);
+    } else if(f.type.startsWith('video/')){
+      const v = document.createElement('video'); v.src = URL.createObjectURL(f); v.muted=true; v.loop=true; v.autoplay=true;
+      div.appendChild(v);
+    } else {
+      const span = document.createElement('div'); span.style.padding='8px'; span.style.fontSize='12px'; span.style.textAlign='center';
+      span.innerText = f.name.split('.').pop().toUpperCase(); div.appendChild(span);
+    }
+    previewEl.appendChild(div);
+  }
+});
+
+/* ---------- description char count ---------- */
+desc.addEventListener('input', () => {
+  const n = desc.value.length;
+  charCount.innerText = `${n}/2000`;
+  if(n > 2000) desc.value = desc.value.slice(0,2000);
+});
+
+/* ---------- Simple captcha (math) ---------- */
+let captchaAnswer = null;
+const captchaQEl = document.getElementById('captcha-question');
+const captchaInput = document.getElementById('captcha-answer');
+document.getElementById('refresh-captcha').addEventListener('click', genCaptcha);
+
+function genCaptcha(){
+  const a = Math.floor(Math.random()*9)+1;
+  const b = Math.floor(Math.random()*9)+1;
+  captchaAnswer = a + b;
+  captchaQEl.innerText = `${a} + ${b} = ?`;
+}
+genCaptcha();
+
+/* ---------- Anti-spam client-side ---------- */
+const SUBMIT_INTERVAL = 60 * 1000; // 60 seconds between submits per browser
+function canSubmit(){
+  const last = localStorage.getItem('qg_last_submit');
+  if(!last) return true;
+  return (Date.now() - Number(last)) > SUBMIT_INTERVAL;
+}
+function setSubmitted(){
+  localStorage.setItem('qg_last_submit', String(Date.now()));
+}
+function updateRateInfo(){
+  if(canSubmit()){
+    rateInfo.innerText = 'You can submit now';
+    rateInfo.className = 'pill';
+  } else {
+    const last = Number(localStorage.getItem('qg_last_submit'));
+    const remain = Math.ceil((SUBMIT_INTERVAL - (Date.now()-last))/1000);
+    rateInfo.innerText = `Wait ${remain}s`;
+    rateInfo.className = 'pill';
+  }
+}
+updateRateInfo();
+setInterval(updateRateInfo, 1000);
+
+/* ---------- Build payload and send ---------- */
+async function buildPayload(){
+  // Basic validations
+  if(enforceLogin.checked && !useridEl.value){
+    throw new Error('You must login with Discord first.');
+  }
+  // honeypot check
+  const hp = document.querySelector('input[name="website_name"]').value;
+  if(hp.trim() !== '') throw new Error('Spam detected (honeypot).');
+
+  // captcha check
+  if(String(captchaInput.value).trim() !== String(captchaAnswer)) throw new Error('Captcha incorrect.');
+
+  if(!canSubmit()) throw new Error('You are submitting too frequently. Try again later.');
+
+  const files = [];
+  for(const f of selectedFiles){
+    if(f.size > MAX_FILE_SIZE) throw new Error(`${f.name} exceeds ${MAX_FILE_SIZE} bytes.`);
+    const base64 = await fileToBase64(f);
+    files.push({ name: f.name, type: f.type || 'application/octet-stream', size: f.size, data: base64.split(',')[1] });
   }
 
   const payload = {
-    embeds: [{
-      title: "🚨 New Complaint",
-      color: 15158332,
-      fields: [
-        { name: "User", value: `${discordUser.username}#${discordUser.discriminator}` },
-        { name: "User ID", value: discordUser.id },
-        { name: "Title", value: title },
-        { name: "Message", value: msg }
-      ],
-      footer: { text: "Complaint System V1" },
-      timestamp: new Date()
-    }]
+    type: activeType, // complaint or suggestion
+    priority: document.getElementById('priority').value,
+    description: desc.value.trim(),
+    created_at: new Date().toISOString(),
+    user: {
+      username: usernameEl.value || null,
+      id: useridEl.value || null,
+      email: emailEl.value || null
+    },
+    files
   };
-
-  fetch(WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(() => {
-    alert("Complaint sent successfully");
-    document.getElementById("title").value = "";
-    document.getElementById("message").value = "";
-  })
-  .catch(() => alert("Failed to send complaint"));
+  return payload;
 }
-</script>
 
+function fileToBase64(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = e => rej(e);
+    r.readAsDataURL(file);
+  });
+}
+
+/* try direct POST to discord webhook (may be blocked by CORS) */
+async function postDirectWebhook(webhookUrl, payload){
+  // Discord webhook with attachments requires multipart/form-data.
+  // We will send a JSON body with files converted to attachments property using multipart/form-data.
+  const form = new FormData();
+  const content = `**${payload.type.toUpperCase()}** • Priority: ${payload.priority}\n**From:** ${payload.user.username || 'Unknown'} (${payload.user.id})\n**Email:** ${payload.user.email || '—'}\n**Time:** ${payload.created_at}\n\n${payload.description || '*No description provided*'}`;
+  form.append('content', content);
+
+  // append files
+  payload.files.forEach((f, idx) => {
+    const blob = base64ToBlob(f.data, f.type);
+    // name should be like file0
+    form.append('file' + idx, blob, f.name);
+  });
+
+  // direct POST
+  const resp = await fetch(webhookUrl, { method: 'POST', body: form });
+  if(!resp.ok) throw new Error('Webhook returned ' + resp.status);
+  return resp;
+}
+
+function base64ToBlob(base64Data, contentType='application/octet-stream'){
+  const byteCharacters = atob(base64Data);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  return new Blob([byteArray], {type: contentType});
+}
+
+/* post to forwarder endpoint (recommended) */
+async function postToForwarder(forwardUrl, payload){
+  const resp = await fetch(forwardUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if(!resp.ok){
+    const txt = await resp.text();
+    throw new Error('Forwarder error: ' + resp.status + ' ' + txt);
+  }
+  return resp;
+}
+
+/* Download payload debug */
+downloadBtn.addEventListener('click', async () => {
+  try {
+    const payload = await buildPayload();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'qg_payload.json'; a.click();
+    URL.revokeObjectURL(url);
+  } catch (e){
+    alert('Error: ' + e.message);
+  }
+});
+
+/* Submit handler */
+submitBtn.addEventListener('click', async () => {
+  statusEl.innerHTML = '';
+  submitBtn.disabled = true;
+  try {
+    const payload = await buildPayload();
+
+    if(deliverMethod.value === 'direct'){
+      const webhook = webhookUrlInput.value.trim();
+      if(!webhook) throw new Error('Please paste the webhook URL for direct delivery.');
+      await postDirectWebhook(webhook, payload);
+      statusEl.innerHTML = `<div class="pill success">Delivered directly to webhook. Thank you!</div>`;
+    } else {
+      // forwarder
+      const forwarded = await postToForwarder(forwardUrlInput.value || '/api/forward', payload);
+      statusEl.innerHTML = `<div class="pill success">Delivered via forwarder. Thank you!</div>`;
+    }
+
+    setSubmitted();
+    updateRateInfo();
+    // clear form (but keep user details)
+    desc.value = ''; selectedFiles = []; filesInput.value = ''; previewEl.innerHTML = '';
+    genCaptcha(); captchaInput.value = '';
+  } catch (e){
+    statusEl.innerHTML = `<div class="pill danger">Error: ${e.message}</div>`;
+    console.error(e);
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
+/* init */
+(function init(){
+  // If there's an access token already in session, try to populate
+  tryPopulate();
+})();
+</script>
 </body>
 </html>
